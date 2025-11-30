@@ -1,0 +1,11 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=aws-1-ap-south-1.pooler.supabase.com;Port=6543;Database=postgres;UserName=postgres.tpfxrnzxnfrqvyrfkzss;Password=FVsVb7GEct8KQDDg"
+  },
+  "Tables": {
+    "UsersTable": "Users",
+    "MessagesTable": "Message",
+    "TransactionsTable": "Transaction",
+    "PaymentsTable": "Payment"
+  }
+}
