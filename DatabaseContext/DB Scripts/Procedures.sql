@@ -1,72 +1,104 @@
-﻿-- ================================================
--- 🧱 CHAT APP DATABASE TRIGGERS (MODIFIED)
--- ✅ Safe duplicate prevention (Option 3)
--- ================================================
+﻿-- ===========================================
+-- Procedures Script for Expense Tracker
+-- ===========================================
 
--- ================================================
--- FUNCTION: Create self contact when an account is created
--- ================================================
-CREATE OR REPLACE FUNCTION create_contact_for_account()
-RETURNS TRIGGER AS $$
+-- ===========================================
+-- Function: insert_user
+-- ===========================================
+CREATE OR REPLACE FUNCTION public.insert_user(
+    p_name TEXT,
+    p_email TEXT,
+    p_password TEXT,
+    p_phone_number TEXT
+)
+RETURNS INTEGER AS $$
+DECLARE 
+    new_id INT;
 BEGIN
-    INSERT INTO "Contacts" ("OwnerId", "AccountId", "Alias", "AliasPicture", "Status", "LastSeen")
-    SELECT NEW."Id", NEW."Id", 'Myself', NEW."ProfilePicture", 'online', now()
-    WHERE NOT EXISTS (
-        SELECT 1 FROM "Contacts"
-        WHERE "OwnerId" = NEW."Id" AND "AccountId" = NEW."Id"
-    );
+    SET search_path = public, pg_temp;
 
-    RETURN NEW;
+    INSERT INTO "Users" ("Name", "Email", "Password", "PhoneNumber")
+    VALUES (p_name, p_email, p_password, p_phone_number)
+    RETURNING "Id" INTO new_id;
+
+    RETURN new_id;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- TRIGGER: After inserting into Accounts
-DROP TRIGGER IF EXISTS trg_create_contact_for_account ON "Accounts";
-CREATE TRIGGER trg_create_contact_for_account
-AFTER INSERT ON "Accounts"
-FOR EACH ROW
-EXECUTE FUNCTION create_contact_for_account();
 
--- ================================================
--- FUNCTION: Create default account when a user is created
--- ================================================
-CREATE OR REPLACE FUNCTION create_account_for_user()
-RETURNS TRIGGER AS $$
-DECLARE
-    new_account_id UUID;
+-- ===========================================
+-- Function: insert_message
+-- ===========================================
+CREATE OR REPLACE FUNCTION public.insert_message(
+    p_user_id INTEGER,
+    p_message_content TEXT
+)
+RETURNS INTEGER AS $$
+DECLARE 
+    new_id INT;
 BEGIN
-    INSERT INTO "Accounts" (
-        "UserId", "UserName", "Password", "Email", "ProfilePicture", "Bio"
-    )
-    VALUES (
-        NEW."Id",
-        lower(NEW."UserName"),
-        NEW."Password",
-        NEW."Email",
-        NULL,
-        'Welcome to the app!'
-    )
-    RETURNING "Id" INTO new_account_id;
+    SET search_path = public, pg_temp;
 
-    -- ✅ Safe self-contact creation (only if not already present)
-    INSERT INTO "Contacts" ("OwnerId", "AccountId", "Alias", "Status", "LastSeen")
-    SELECT new_account_id, new_account_id, 'Myself', 'online', now()
-    WHERE NOT EXISTS (
-        SELECT 1 FROM "Contacts"
-        WHERE "OwnerId" = new_account_id AND "AccountId" = new_account_id
-    );
+    INSERT INTO "Message" ("UserId", "MessageContent")
+    VALUES (p_user_id, p_message_content)
+    RETURNING "Id" INTO new_id;
 
-    RETURN NEW;
+    RETURN new_id;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- TRIGGER: After inserting into Users
-DROP TRIGGER IF EXISTS trg_create_account_for_user ON "Users";
-CREATE TRIGGER trg_create_account_for_user
-AFTER INSERT ON "Users"
-FOR EACH ROW
-EXECUTE FUNCTION create_account_for_user();
 
--- ================================================
--- ✅ Updated triggers complete
--- ================================================
+-- ===========================================
+-- Function: insert_payment
+-- ===========================================
+CREATE OR REPLACE FUNCTION public.insert_payment(
+    p_user_id INTEGER,
+    p_message_id INTEGER
+)
+RETURNS INTEGER AS $$
+DECLARE 
+    new_id INT;
+BEGIN
+    SET search_path = public, pg_temp;
+
+    INSERT INTO "Payment" ("UserId", "MessageId")
+    VALUES (p_user_id, p_message_id)
+    RETURNING "Id" INTO new_id;
+
+    RETURN new_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+
+-- ===========================================
+-- Function: insert_transaction
+-- ===========================================
+CREATE OR REPLACE FUNCTION public.insert_transaction(
+    p_type TEXT,
+    p_amount NUMERIC(10,2),
+    p_account,
+    p_target TEXT,
+    p_time TIMESTAMPTZ,
+    p_message_id INTEGER
+)
+RETURNS INTEGER AS $$
+DECLARE 
+    new_id INT;
+BEGIN
+    SET search_path = public, pg_temp;
+
+    INSERT INTO "Transaction" (
+        "Type",
+        "Amount",
+        "Account",
+        "Target",
+        "Time",
+        "MessageId"
+    )
+    VALUES (p_type, p_amount, p_account, p_target, p_time, p_message_id)
+    RETURNING "Id" INTO new_id;
+
+    RETURN new_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
