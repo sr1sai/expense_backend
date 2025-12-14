@@ -9,6 +9,7 @@ namespace Domain
     public class TransactionDTO
     {
         public Guid UserId { get; set; }
+        public Guid MessageId { get; set; }
         public string Type{ get; set; }
         public double Amount{ get; set; }
         public string Account { get; set; }

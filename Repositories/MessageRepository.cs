@@ -23,14 +23,16 @@ namespace Repositories
             {
                 query = $@"
                     INSERT INTO ""{_messageTable}"" 
-                    (""UserId"", ""MessageContent"", )
-                    VALUES (@userId, @messageContent) 
+                    (""UserId"", ""Sender"", ""MessageContent"", ""Time"" )
+                    VALUES (@userId, @sender, @messageContent, @time) 
                     RETURNING ""Id"";
                 ",
                 parameters = new Dictionary<string, object>
                 {
                     { "@UserId", message.UserId},
+                    { "@sender", message.Sender},
                     { "@messageContent", message.MessageContent },
+                    { "@time", message.Time},
                 }
             };
         }
