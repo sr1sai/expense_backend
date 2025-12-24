@@ -25,6 +25,7 @@ namespace Backend
             // Register services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IAIService, AIService>();
 
             return services;
         }
