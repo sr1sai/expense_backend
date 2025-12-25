@@ -21,10 +21,15 @@ namespace Backend
             // Register repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddHttpClient<IAIRepository, AIRepository>();
 
             // Register services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITransactionService, TransactionService>();
+            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IAIService, AIService>();
 
             return services;
