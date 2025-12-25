@@ -4,16 +4,17 @@ using Repositories;
 using Repositories.Contracts;
 using Services;
 using Services.Contracts;
+using Microsoft.Extensions.Configuration;
 
 
 namespace Backend
 {
     public static class DependencyInjections
     {
-        public static IServiceCollection AddProjectDependencies(this IServiceCollection services, bool production = false)
+        public static IServiceCollection AddProjectDependencies(this IServiceCollection services, bool production, IConfiguration configuration)
         {
             // Register DatabaseConfig as IDatabaseConfig
-            services.AddSingleton<IDatabaseConfig>(provider => new DatabaseConfig(production));
+            services.AddSingleton<IDatabaseConfig>(provider => new DatabaseConfig(production, configuration));
 
             // Register your database context implementation
             services.AddScoped<IDatabaseContext, DatabaseContext>();

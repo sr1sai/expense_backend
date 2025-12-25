@@ -13,7 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 //custom middlewares
-builder.Services.AddProjectDependencies(builder.Environment.IsProduction());
+builder.Services.AddProjectDependencies(builder.Environment.IsProduction(), builder.Configuration);
 builder.Services.AddClients(builder.Configuration, builder.Environment.IsProduction());
 
 var app = builder.Build();

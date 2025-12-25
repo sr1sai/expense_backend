@@ -7,22 +7,18 @@ namespace Database
     {
         public IConfiguration Configuration { get; private set; }
 
-        public DatabaseConfig(bool production)
+        public DatabaseConfig(bool production, IConfiguration configuration)
         {
+            // Create a new configuration that includes the database settings file
             var configBuilder = new ConfigurationBuilder();
-
-            // Base path should be the Backend solution folder
-            var backendRoot = Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..");
-            configBuilder.SetBasePath(backendRoot);
-
-            var settingsFolder = "DatabaseContext";
+            
+            // Start with existing configuration (appsettings.json, environment variables, etc.)
+            configBuilder.AddConfiguration(configuration);
+            
+            // Add database-specific settings
             var fileName = production ? "DatabaseSettings.prod.json" : "DatabaseSettings.json";
-            var filePath = Path.Combine(settingsFolder, fileName);
-
-            // Log this if you want to verify the path
-            //Console.WriteLine($"Loading database config from: {Path.GetFullPath(Path.Combine(backendRoot, filePath))}");
-
-            configBuilder.AddJsonFile(filePath, optional: false, reloadOnChange: true);
+            configBuilder.AddJsonFile(fileName, optional: false, reloadOnChange: true);
+            
             Configuration = configBuilder.Build();
         }
     }

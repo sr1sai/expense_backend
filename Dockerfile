@@ -31,6 +31,9 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
+# Copy database configuration files to the working directory
+COPY ["DatabaseContext/DatabaseSettings.prod.json", "./DatabaseSettings.prod.json"]
+
 # Create non-root user for security
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
