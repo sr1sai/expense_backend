@@ -1,4 +1,9 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".dockerignore" />
+    <File Path="Dockerfile" />
+    <File Path="render.yaml" />
+  </Folder>
   <Project Path="API/API.csproj" Id="b01c7a02-9d4e-484b-877c-31adf7b2d3d5" />
   <Project Path="DatabaseContext/DatabaseContext.csproj" Id="9e3af06f-daa3-4087-a1a3-08b1473f9835" />
   <Project Path="Domain/Domain.csproj" Id="cecf00b8-fcee-4f98-8012-544b60a3f166" />
