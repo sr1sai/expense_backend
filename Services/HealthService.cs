@@ -38,7 +38,12 @@ namespace Services
             {
                 response.status = false;
                 response.message = ex.Message;
-                response.data = null;
+                response.data = new HealthCheckResult
+                {
+                    Backend = new HealthStatus { Service = "Backend API", Status = "Unhealthy", Timestamp = DateTime.UtcNow, Message = ex.Message },
+                    Database = new HealthStatus { Service = "Database", Status = "Unknown", Timestamp = DateTime.UtcNow, Message = "Not checked" },
+                    OverallStatus = "Unhealthy"
+                };
             }
             return response;
         }

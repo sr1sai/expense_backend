@@ -56,7 +56,7 @@ namespace Repositories
         public TransactionRepository(IDatabaseContext databaseContext, IDatabaseConfig databaseConfig)
         {
             _databaseContext = databaseContext;
-            _transactionQueries = new TransactionQueries(databaseConfig.Configuration["Tables:TransactionsTable"]);
+            _transactionQueries = new TransactionQueries(databaseConfig.Configuration["Tables:TransactionsTable"] ?? "Transaction");
         }
 
         public List<Transaction> GetTransactions(Guid userId)
@@ -79,7 +79,7 @@ namespace Repositories
             {
                 var query = _transactionQueries.AddTransactionQuery(transaction);
                 var result = _databaseContext.ExecuteScalar(query);
-                return Guid.Parse(result.ToString());
+                return Guid.Parse(result?.ToString() ?? Guid.Empty.ToString());
             }
             catch (Exception ex)
             {

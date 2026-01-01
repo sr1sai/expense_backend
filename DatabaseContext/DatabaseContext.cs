@@ -11,7 +11,7 @@ namespace Database
         private readonly NpgsqlConnection _connection;
         public DatabaseContext(IDatabaseConfig databaseConfig)
         {
-            _connectionString = databaseConfig.Configuration["ConnectionStrings:DefaultConnection"];
+            _connectionString = databaseConfig.Configuration["ConnectionStrings:DefaultConnection"] ?? throw new InvalidOperationException("Connection string not found");
             try
             {
                 _connection = new NpgsqlConnection(_connectionString);
@@ -58,7 +58,7 @@ namespace Database
                     command.Parameters.AddWithValue(param.Key, param.Value ?? DBNull.Value);
                 }
 
-                return command.ExecuteScalar();
+                return command.ExecuteScalar() ?? throw new InvalidOperationException("Query returned null");
             }
             catch (Exception ex)
             {
@@ -87,7 +87,7 @@ namespace Database
 
                 while (reader.Read())
                 {
-                    var row = new Dictionary<string, object>();
+                    var row = new Dictionary<string, object?>();
 
                     for (int i = 0; i < reader.FieldCount; i++)
                     {
@@ -96,9 +96,12 @@ namespace Database
                     }
 
                     string json = JsonSerializer.Serialize(row);
-                    T item = JsonSerializer.Deserialize<T>(json);
+                    T? item = JsonSerializer.Deserialize<T>(json);
 
-                    result.Add(item);
+                    if (item != null)
+                    {
+                        result.Add(item);
+                    }
                 }
 
                 return result;

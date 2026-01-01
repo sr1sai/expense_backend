@@ -10,10 +10,10 @@ namespace Domain
     {
         public Guid UserId { get; set; }
         public Guid MessageId { get; set; }
-        public string Type{ get; set; }
-        public double Amount{ get; set; }
-        public string Account { get; set; }
-        public string Target { get; set; }
+        public string Type { get; set; } = string.Empty;
+        public double Amount { get; set; }
+        public string Account { get; set; } = string.Empty;
+        public string Target { get; set; } = string.Empty;
         public DateTime Time { get; set; }
     }
     public class Transaction : TransactionDTO

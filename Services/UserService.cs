@@ -66,7 +66,7 @@ namespace Services
             {
                 response.status = false;
                 response.message = ex.Message;
-                response.data = null;
+                response.data = new UserPublicDTO();
             }
             return response;
         }

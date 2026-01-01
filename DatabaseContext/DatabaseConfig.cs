@@ -62,7 +62,7 @@ namespace Database
                 }
                 
                 // Add the built connection string to the configuration
-                configBuilder.AddInMemoryCollection(new Dictionary<string, string>
+                configBuilder.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     { "ConnectionStrings:DefaultConnection", connectionString }
                 });
