@@ -4,7 +4,6 @@ services:
     runtime: docker
     plan: free
     region: singapore
-    env: docker
     dockerfilePath: ./Dockerfile
     dockerContext: .
     envVars:

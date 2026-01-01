@@ -16,7 +16,7 @@ COPY ["DatabaseContext/DatabaseContext.csproj", "DatabaseContext/"]
 # Restore dependencies
 RUN dotnet restore "API/API.csproj"
 
-# Copy everything else
+# Copy everything else (includes DatabaseSettings.prod.json)
 COPY . .
 
 # Build
@@ -29,13 +29,12 @@ RUN dotnet publish "API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAp
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
 
-# Copy database configuration files to the working directory
-COPY ["DatabaseContext/DatabaseSettings.prod.json", "./DatabaseSettings.prod.json"]
+# Copy published output (includes DatabaseSettings.prod.json via DatabaseContext.csproj)
+COPY --from=publish /app/publish .
 
 # Create non-root user for security
 RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
-ENTRYPOINT ["dotnet", "API.dll"]
+ENTRYPOINT ["dotnet", "API.dll"]ENTRYPOINT ["dotnet", "API.dll"]

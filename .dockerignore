@@ -10,3 +10,6 @@
 **/docker-compose*
 **/*.Development.json
 **/appsettings.Development.json
+**/secret.database.json
+DATABASE_CONFIG.md
+.env.example
