@@ -28,11 +28,11 @@ namespace Services
         {
             Guid saveResponse = _messageRepository.AddMessage(message); 
             
-            string classification = _aIRepository.ClassifyMessage(message).ToString();
+            string classification = _aIRepository.ClassifyMessage(message).Result ?? "Unknown";
             
             if(classification == new MessageClassification().Payment)
             {
-                Message Payemnet = new Message()
+                Message payment = new Message()
                 {
                     Id = saveResponse,
                     UserId = message.UserId,
@@ -41,7 +41,7 @@ namespace Services
                     Time = message.Time
                 };
 
-                ExtractTransaction(Payemnet);
+                ExtractTransaction(payment);
             }
 
             var response = new Response<string>

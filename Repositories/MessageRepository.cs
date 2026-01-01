@@ -45,7 +45,7 @@ namespace Repositories
         public MessageRepository(IDatabaseContext databaseContext, IDatabaseConfig databaseConfig)
         {
             _databaseContext = databaseContext;
-            _messageQueries = new MessageQueries(databaseConfig.Configuration["Tables:MessagesTable"]);
+            _messageQueries = new MessageQueries(databaseConfig.Configuration["Tables:MessagesTable"] ?? "Message");
         }
 
         public Guid AddMessage(MessageDTO message)
@@ -54,10 +54,10 @@ namespace Repositories
             {
                 var query = _messageQueries.AddMessageQuery(message);
                 object guid = _databaseContext.ExecuteScalar(query);
-                return Guid.Parse(guid.ToString());
+                return Guid.Parse(guid?.ToString() ?? Guid.Empty.ToString());
 
             }
-            catch (Exception ex) 
+            catch (Exception)
             {
                 return Guid.Empty;
             }

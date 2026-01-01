@@ -9,7 +9,7 @@ namespace Domain
     public class Response<T>
     {
         public bool status { get; set; }
-        public string message { get; set; }
-        public T data { get; set; }
+        public string message { get; set; } = string.Empty;
+        public T data { get; set; } = default!;
     }
 }

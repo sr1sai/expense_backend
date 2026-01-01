@@ -10,8 +10,8 @@ namespace Domain
     public class MessageDTO
     {
         public Guid UserId { get; set; }
-        public string Sender { get; set; }
-        public string MessageContent { get; set; }
+        public string Sender { get; set; } = string.Empty;
+        public string MessageContent { get; set; } = string.Empty;
         public DateTime Time { get; set; }
     }
     public class Message : MessageDTO

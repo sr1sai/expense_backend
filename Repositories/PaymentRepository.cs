@@ -39,7 +39,7 @@ namespace Repositories
         public PaymentRepository(IDatabaseContext databaseContext, IDatabaseConfig databaseConfig)
         {
             _databaseContext = databaseContext;
-            _paymentQueries = new PaymentQueries(databaseConfig.Configuration["Tables:PaymentsTable"]);
+            _paymentQueries = new PaymentQueries(databaseConfig.Configuration["Tables:PaymentsTable"] ?? "Payment");
         }
 
         public Guid AddToPayments(PaymentDTO payment)
@@ -48,9 +48,9 @@ namespace Repositories
             {
                 var query = _paymentQueries.AddToPaymentsQuery(payment);
                 object guid = _databaseContext.ExecuteScalar(query);
-                return Guid.Parse(guid.ToString());
+                return Guid.Parse(guid?.ToString() ?? Guid.Empty.ToString());
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Guid.Empty;
             }

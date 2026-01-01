@@ -8,7 +8,7 @@ namespace Domain
 {
     public class ParameterisedQuery
     {
-        public string query { get; set; }
-        public Dictionary<string, object> parameters { get; set; }
+        public string query { get; set; } = string.Empty;
+        public Dictionary<string, object> parameters { get; set; } = new();
     }
 }

@@ -45,7 +45,7 @@ namespace Repositories
                     { "@name", user.Name },
                     { "@email", user.Email },
                     { "@password", user.Password },
-                    { "@phone", string.IsNullOrEmpty(user.PhoneNumber) ? null : user.PhoneNumber}
+                    { "@phone", (object?)user.PhoneNumber ?? DBNull.Value}
                 }
             };
         }
@@ -70,12 +70,12 @@ namespace Repositories
         public UserRepository(IDatabaseContext databaseContext, IDatabaseConfig databaseConfig) 
         {
             _databaseContext = databaseContext;
-            _userQueries = new UserQueries(databaseConfig.Configuration["Tables:UsersTable"]);
+            _userQueries = new UserQueries(databaseConfig.Configuration["Tables:UsersTable"] ?? "Users");
         }
         public Guid IsValidCredentials(string email, string password)
         {
-            Guid userId = _databaseContext.GetData<Users>(_userQueries.LoginQuery(email, password)).FirstOrDefault().Id;
-            return userId;
+            var users = _databaseContext.GetData<Users>(_userQueries.LoginQuery(email, password));
+            return users.FirstOrDefault()?.Id ?? Guid.Empty;
         }
         public Guid RegisterUser(UsersDTO user)
         {
@@ -85,7 +85,7 @@ namespace Repositories
 
                 object result = _databaseContext.ExecuteScalar(query);
                 
-                return Guid.Parse(result.ToString());
+                return Guid.Parse(result?.ToString() ?? Guid.Empty.ToString());
             }
             catch (Exception ex)
             {
@@ -97,8 +97,8 @@ namespace Repositories
             try
             {
                 var query = _userQueries.GetUserByIdQuery(id);
-                UserPublicDTO user = _databaseContext.GetData<UserPublicDTO>(query).FirstOrDefault();
-                return user;
+                UserPublicDTO? user = _databaseContext.GetData<UserPublicDTO>(query).FirstOrDefault();
+                return user ?? throw new Exception("User not found");
             }
             catch(Exception ex)
             {
