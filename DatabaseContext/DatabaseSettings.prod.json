@@ -1,6 +1,6 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=aws-1-ap-south-1.pooler.supabase.com;Port=6543;Database=postgres;UserName=postgres.tpfxrnzxnfrqvyrfkzss;Password=FVsVb7GEct8KQDDg"
+    "ConnectionTemplate": "Host={HOST};Port={PORT};Database={DATABASE};Username={USERNAME};Password={PASSWORD};SSLMode=Require;Trust Server Certificate=false;CommandTimeout=30;ApplicationName={APPLICATION_NAME};Pooling=true;Minimum Pool Size=0;Maximum Pool Size=100;",
   },
   "Tables": {
     "UsersTable": "Users",

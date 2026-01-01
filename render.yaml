@@ -12,4 +12,21 @@ services:
         value: Production
       - key: PORT
         value: 8080
+      # Database Configuration - Set these in Render Dashboard as secrets
+      - key: HOST
+        sync: false
+      - key: PORT_DB
+        value: 5432
+      - key: DATABASE
+        sync: false
+      - key: USERNAME
+        sync: false
+      - key: PASSWORD
+        sync: false
+      - key: SSL_MODE
+        value: Require
+      - key: COMMAND_TIMEOUT
+        value: 30
+      - key: APPLICATION_NAME
+        value: expense_backend
     healthCheckPath: /health

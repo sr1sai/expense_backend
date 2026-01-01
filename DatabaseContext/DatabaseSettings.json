@@ -1,6 +1,6 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=aws-1-ap-south-1.pooler.supabase.com;Port=6543;Database=postgres;UserName=postgres.tpfxrnzxnfrqvyrfkzss;Password=FVsVb7GEct8KQDDg"
+    "ConnectionTemplate": "Host={HOST};Port={PORT};Database={DATABASE};Username={USERNAME};Password={PASSWORD};SSLMode={SSL_MODE};CommandTimeout={COMMAND_TIMEOUT};ApplicationName={APPLICATION_NAME};Include Error Detail=true"
   },
   "Tables": {
     "UsersTable": "Users",

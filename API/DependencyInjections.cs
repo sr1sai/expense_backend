@@ -16,7 +16,7 @@ namespace Backend
             // Register DatabaseConfig as IDatabaseConfig
             services.AddSingleton<IDatabaseConfig>(provider => new DatabaseConfig(production, configuration));
 
-            // Register your database context implementation
+            // Register database context implementation
             services.AddScoped<IDatabaseContext, DatabaseContext>();
 
             // Register repositories
@@ -24,6 +24,7 @@ namespace Backend
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IHealthRepository, HealthRepository>();
             services.AddHttpClient<IAIRepository, AIRepository>();
 
             // Register services
@@ -32,6 +33,7 @@ namespace Backend
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<IAIService, AIService>();
+            services.AddScoped<IHealthService, HealthService>();
 
             return services;
         }
