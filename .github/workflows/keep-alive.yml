@@ -1,0 +1,31 @@
+name: Keep Render Service Alive
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'   # every 10 minutes
+  workflow_dispatch:
+
+jobs:
+  keep_alive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping Render health endpoint
+        run: |
+          URL="https://expense-backend-o5me.onrender.com/api/Health/Status"
+
+          echo "Pinging $URL at $(date -u)"
+
+          RESPONSE=$(curl -s -o response.json -w "%{http_code}" "$URL" || echo "000")
+
+          echo "HTTP Status Code: $RESPONSE"
+          echo "Response Body:"
+          cat response.json || echo "No response body"
+
+          # Alert (fail job) if not healthy
+          if [[ "$RESPONSE" -ne 200 ]]; then
+            echo "❌ Health check failed!"
+            exit 1
+          fi
+
+          echo "✅ Service is healthy"
