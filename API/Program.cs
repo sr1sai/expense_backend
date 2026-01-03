@@ -38,6 +38,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Add HTTP request logging for production monitoring
+app.Use(async (context, next) =>
+{
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+    var startTime = DateTime.UtcNow;
+    var requestPath = context.Request.Path;
+    var requestMethod = context.Request.Method;
+
+    logger.LogInformation("Incoming {Method} request to {Path} at {Timestamp}",
+        requestMethod, requestPath, startTime);
+
+    await next.Invoke();
+
+    var duration = DateTime.UtcNow - startTime;
+    logger.LogInformation("Completed {Method} request to {Path} with status {StatusCode} in {Duration}ms",
+        requestMethod, requestPath, context.Response.StatusCode, duration.TotalMilliseconds);
+});
+
 app.UseCors("AllowedClients");
 
 // Comment out HTTPS redirection (Render handles SSL at load balancer)
@@ -51,12 +69,12 @@ app.MapControllers();
 app.MapGet("/health", (IHealthService healthService) =>
 {
     var healthStatus = healthService.GetHealthStatus();
-    
+
     if (healthStatus.status && healthStatus.data.OverallStatus == "Healthy")
     {
         return Results.Ok(healthStatus);
     }
-    
+
     return Results.Json(healthStatus, statusCode: 503);
 });
 
