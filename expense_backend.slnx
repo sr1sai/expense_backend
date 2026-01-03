@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path=".dockerignore" />
+    <File Path=".github/workflows/keep-alive.yml" />
     <File Path="Dockerfile" />
     <File Path="render.yaml" />
   </Folder>
