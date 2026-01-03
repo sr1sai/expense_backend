@@ -9,15 +9,32 @@ namespace API.Controllers
     public class PaymentController: ControllerBase
     {
         private readonly IPaymentService _paymentService;
-        public PaymentController(IPaymentService paymentService)
+        private readonly ILogger<PaymentController> _logger;
+
+        public PaymentController(IPaymentService paymentService, ILogger<PaymentController> logger)
         {
             _paymentService = paymentService;
+            _logger = logger;
         }
+
         [HttpPost]
         [ActionName("AddToPayments")]
         public Response<Guid> AddToPayments([FromBody] PaymentDTO payment)
         {
-            return _paymentService.AddToPayments(payment);
+            _logger.LogInformation("AddToPayments requested for UserId: {UserId}, MessageId: {MessageId} at {Timestamp}", 
+                payment.UserId, payment.MessageId, DateTime.UtcNow);
+            try
+            {
+                var result = _paymentService.AddToPayments(payment);
+                _logger.LogInformation("AddToPayments completed - Status: {Status}, PaymentId: {PaymentId}", 
+                    result.status, result.data);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during AddToPayments for UserId: {UserId}", payment.UserId);
+                throw;
+            }
         }
     }
 }
